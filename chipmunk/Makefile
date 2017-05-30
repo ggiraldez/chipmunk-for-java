@@ -28,6 +28,7 @@ CPPFLAGS = \
 CFLAGS := \
 	-std=gnu99 \
 	-Wall \
+	-fPIC \
 	#-ffast-math \
 	#-O3 \
 

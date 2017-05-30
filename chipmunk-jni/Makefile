@@ -33,11 +33,12 @@ CPPFLAGS = \
 
 CFLAGS := \
 	-Wall \
+	-fPIC
 
 LDFLAGS := \
 	-shared \
 	-L".." \
-	-L"$(JAVA_HOME)/jre/lib/i386/client" \
+	-L"$(JAVA_HOME)/jre/lib/amd64/server" \
 	-lchipmunk \
 	-ljvm \
 
