@@ -18,32 +18,38 @@
 # You should have received a copy of the GNU General Public License
 # along with Chipmunk for Java.  If not, see <http://www.gnu.org/licenses/>.
 
+ifeq ($(shell uname -s),Darwin)
+	jni_binary = libchipmunk-jni.dylib
+else
+	jni_binary = libchipmunk-jni.so
+endif
+
 .PHONY: \
 	all \
 	clean \
 	run-demo \
 	chipmunk-demo.jar \
-	libchipmunk-jni.so \
+	$(jni_binary) \
 	libchipmunk.a \
 	chipmunk.jar \
 
 all: \
-	libchipmunk-jni.so \
+	$(jni_binary) \
 	chipmunk-demo.jar \
 
 run-demo: all
 	java -Djava.library.path=. -cp chipmunk-demo.jar:chipmunk.jar johang.chipmunk.demo1.Balls
 
 clean:
-	rm -f libchipmunk-jni.so libchipmunk.a chipmunk.jar chipmunk-demo.jar
+	rm -f $(jni_binary) libchipmunk.a chipmunk.jar chipmunk-demo.jar
 	$(MAKE) -C chipmunk clean
 	$(MAKE) -C chipmunk-jni clean
 	ant -f chipmunk-java/build.xml clobber
 	ant -f chipmunk-java-demo/build.xml clobber
 
-libchipmunk-jni.so: libchipmunk.a chipmunk.jar
+$(jni_binary): libchipmunk.a chipmunk.jar
 	$(MAKE) -C chipmunk-jni
-	cp chipmunk-jni/libchipmunk-jni.so .
+	cp chipmunk-jni/$(jni_binary) .
 
 libchipmunk.a:
 	$(MAKE) -C chipmunk

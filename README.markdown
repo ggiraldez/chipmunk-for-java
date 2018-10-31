@@ -28,6 +28,12 @@ Tested and developed on Ubuntu/Linux. May or may not compile and run on other pl
 1. JDK (like sun-java6-jdk, openjdk-6-jdk or gcj-4.4-jdk.)
 2. C compiler (like gcc.)
 
+Customize the JAVA home location by providing make a variable, eg.:
+
+```
+$ make JAVA_HOME=$(/usr/libexec/java_home)
+```
+
 ### For running
 
 1. JRE.

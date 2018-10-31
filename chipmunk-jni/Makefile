@@ -20,9 +20,17 @@
 
 JAVA_HOME := /usr/lib/jvm/default-java
 
+ifeq ($(shell uname -s),Darwin)
+	platform_ldflags = -L"$(JAVA_HOME)/jre/lib/server"
+	target_binary = libchipmunk-jni.dylib
+else
+	platform_ldflags = -L"$(JAVA_HOME)/jre/lib/amd64/server"
+	target_binary = libchipmunk-jni.so
+endif
+
 CPPFLAGS = \
 	-I"$(JAVA_HOME)/include" \
-	-I"$(JAVA_HOME)/include/linux" \
+	-I"$(JAVA_HOME)/include/$(shell uname -s)" \
 	-I"../chipmunk/include/chipmunk" \
 	-I"./src" \
 	-I"../chipmunk-java/include" \
@@ -38,7 +46,7 @@ CFLAGS := \
 LDFLAGS := \
 	-shared \
 	-L".." \
-	-L"$(JAVA_HOME)/jre/lib/amd64/server" \
+	$(platform_ldflags) \
 	-lchipmunk \
 	-ljvm \
 
@@ -46,14 +54,14 @@ CHIPMUNKJNI_SRC_FILES := $(wildcard src/*.c)
 
 .PHONY: all clean
 
-all: libchipmunk-jni.so
+all: $(target_binary)
 
 -include $(CHIPMUNKJNI_SRC_FILES:%.c=%.d)
 
-libchipmunk-jni.so: $(CHIPMUNKJNI_SRC_FILES:%.c=%.o)
+$(target_binary): $(CHIPMUNKJNI_SRC_FILES:%.c=%.o)
 	$(CC) -o "$@" $^ $(LDFLAGS)
 
 clean:
 	rm -f src/*.o
 	rm -f src/*.d
-	rm -f libchipmunk-jni.so
+	rm -f $(target_binary)
